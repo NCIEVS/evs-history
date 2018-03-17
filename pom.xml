@@ -102,16 +102,13 @@
                         <Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Bundle-Vendor>The Protege Development Team</Bundle-Vendor>
-                        <Import-Package>
-                        	org.protege.editor.owl.client.*                        	                  	                                                          
-                        </Import-Package>
                         <Export-Package>
                             gov.nih.nci.evs.*
                         </Export-Package>
                         <Include-Resource>{maven-resources}</Include-Resource>
                     </instructions>
                 </configuration>
-                <executions>
+                <!-- executions>
                     <execution>
                         <id>bundle-manifest</id>
                         <phase>install</phase>
@@ -119,7 +116,7 @@
                             <goal>manifest</goal>
                         </goals>
                     </execution>
-                </executions>
+                </executions -->
             </plugin>
         </plugins>
     </build>

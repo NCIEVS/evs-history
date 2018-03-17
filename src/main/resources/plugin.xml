@@ -5,7 +5,7 @@
 	<!-- Tabs -->
     <extension id="EVSHistoryTab" point="org.protege.editor.core.application.WorkspaceTab">
         <label value="EVS History"/>
-        <class value="org.protege.editor.owl.ui.OWLWorkspaceViewsTab"/>
+        <class value="gov.nih.nci.evs.EVSHistoryTab"/>
         <editorKitId value="OWLEditorKit"/>
         <index value="Y"/>
         <defaultViewConfigFileName value="viewconfig.xml"/>
