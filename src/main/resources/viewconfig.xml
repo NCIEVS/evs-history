@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <VSNode splits="1.0">
+        <CNode>
+            <Component label="EVS History">
+                <Property id="pluginId" value="gov.nih.nci.evs.EVSHistoryView"/>
+            </Component>
+        </CNode>
+    </VSNode>
+</layout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+	<!-- Tabs -->
+    <extension id="EVSHistoryTab" point="org.protege.editor.core.application.WorkspaceTab">
+        <label value="EVS History"/>
+        <class value="org.protege.editor.owl.ui.OWLWorkspaceViewsTab"/>
+        <editorKitId value="OWLEditorKit"/>
+        <index value="Y"/>
+        <defaultViewConfigFileName value="viewconfig.xml"/>
+    </extension>
+    
+	<!-- View -->
+    <extension id="EVSHistoryView"
+               point="org.protege.editor.core.application.ViewComponent">
+        <label value="EVS History"/>
+        <class value="gov.nih.nci.evs.EVSHistoryView"/>
+        <headerColor value="@org.protege.ontologycolor"/>
+        <category value="EVS History"/>
+        <instantiationType value="eager"/>
+    </extension>
+    
+</plugin>
