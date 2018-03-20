@@ -18,7 +18,6 @@
         <class value="gov.nih.nci.evs.EVSHistoryView"/>
         <headerColor value="@org.protege.ontologycolor"/>
         <category value="EVS History"/>
-        <instantiationType value="eager"/>
     </extension>
     
 </plugin>
