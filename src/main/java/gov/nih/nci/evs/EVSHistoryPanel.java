@@ -14,17 +14,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.table.DefaultTableModel;
 
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLClass;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Properties;
 
-//import org.jdatepicker.impl.*;
-//import org.jdatepicker.util.*;
-//import org.jdatepicker.*;
+import org.jdatepicker.*;
 
 public class EVSHistoryPanel extends JPanel {
 	private static final long serialVersionUID = -4987773065094148253L;
@@ -104,6 +99,18 @@ public class EVSHistoryPanel extends JPanel {
 		filterPanel.add(new JLabel("End Date "));
 		
 		filterPanel.add(enddatePicker);*/
+		
+		//JDatePanel datePanel = new JDatePanel();
+		
+		JDatePicker startdatePicker = new JDatePicker();
+		
+		JDatePicker enddatePicker = new JDatePicker();
+		
+		filterPanel.add(startdatePicker);
+		
+		filterPanel.add(new JLabel("End Date "));
+		
+		filterPanel.add(enddatePicker);
 		
 		return filterPanel;
 	}

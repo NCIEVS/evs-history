@@ -56,13 +56,11 @@
 			<artifactId>guava</artifactId>
 			<version>18.0</version>
 		</dependency>
-		<!--  
 		<dependency>
-			<groupId>org.jdatepicker</groupId>
-			<artifactId>jdatepicker</artifactId>
-			<version>1.3.4</version>
-		</dependency>
-		--> 
+            <groupId>io.github.lzh0379</groupId>
+            <artifactId>jdatepicker</artifactId>
+            <version>2.0.3</version>
+        </dependency>
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>protege-client</artifactId>
@@ -101,6 +99,15 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+                <!--  
+                <executions>
+            		<execution>
+                		<id>copy-dependencies</id>
+                		<phase>package</phase>
+                		<goals><goal>copy-dependencies</goal></goals>
+            		</execution>
+        		</executions>
+        		-->
             </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
@@ -117,12 +124,11 @@
                             gov.nih.nci.evs.*
                         </Export-Package>
                         <Include-Resource>{maven-resources}</Include-Resource>
-                        <!-- 
                         <Import-Package>
-                        	org.jdatepicker.*;version="1.3.4",
+                        	org.protege.editor.owl.ui.*,
+                        	org.jdatepicker.*;version="0";resolution:=optional,
                         	*
                         </Import-Package>
-                         -->
                     </instructions>
                 </configuration>
                 <!-- executions>
