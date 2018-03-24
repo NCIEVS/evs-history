@@ -77,16 +77,6 @@
             <artifactId>protege-editor-owl</artifactId>
             <version>${protege.version}</version>
         </dependency>
-        <dependency>
-        	<groupId>edu.stanford.protege</groupId>
-    	    <artifactId>lucene-search-tab</artifactId>
-            <version>1.0.5-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.uuid</groupId>
-            <artifactId>java-uuid-generator</artifactId>
-            <version>${fasterxml-uuid.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -99,15 +89,6 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
-                <!--  
-                <executions>
-            		<execution>
-                		<id>copy-dependencies</id>
-                		<phase>package</phase>
-                		<goals><goal>copy-dependencies</goal></goals>
-            		</execution>
-        		</executions>
-        		-->
             </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
@@ -125,24 +106,8 @@
                             org.jdatepicker.*
                         </Export-Package>
                         <Include-Resource>{maven-resources}</Include-Resource>
-                        <!--
-                        <Import-Package>
-                        	org.protege.editor.owl.ui.*,
-                        	org.jdatepicker.*;version="0";resolution:=optional,
-                        	*
-                        </Import-Package>
-                        -->
                     </instructions>
                 </configuration>
-                <!-- executions>
-                    <execution>
-                        <id>bundle-manifest</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>manifest</goal>
-                        </goals>
-                    </execution>
-                </executions -->
             </plugin>
         </plugins>
     </build>

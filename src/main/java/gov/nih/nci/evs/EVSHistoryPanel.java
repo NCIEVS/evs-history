@@ -3,35 +3,51 @@ package gov.nih.nci.evs;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.Box;
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField.AbstractFormatter;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.border.EmptyBorder;
 
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLClass;
-import java.util.Calendar;
 
+import org.apache.log4j.Logger;
 import org.jdatepicker.*;
 
-public class EVSHistoryPanel extends JPanel {
+public class EVSHistoryPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = -4987773065094148253L;
 
+	private static final Logger log = Logger.getLogger(EVSHistoryPanel.class);
+	
+	private JDatePicker startdatePicker;
+	private JDatePicker enddatePicker;
+	private JTextField usernameField;
+	private JTextField codeField;
+	private JComboBox operationCombobox;
+	private JButton goBtn;
+	
 	private JTable evsHistoryTable;
 	private JButton refresh;
 	private JButton export;
 	private EVSHistoryTableModel tableModel;
 	
 	private OWLEditorKit owlEditorKit;
-	
 	private OWLClass selected = null;
+	
+	enum OPERATION {ALL, CREATE, UPDATE, DELETE, SPLIT, MERGE, RETIRE, COPY};
 	
 	public EVSHistoryPanel(OWLEditorKit editorKit) {
     	
@@ -42,10 +58,7 @@ public class EVSHistoryPanel extends JPanel {
 	
 	private void createUI() {
     	setLayout(new BorderLayout());
-        //JButton testBtn = new JButton("Test");
-        //testBtn.setEnabled(true);
         
-    	//add(testBtn, BorderLayout.NORTH);
     	add(createTopComponent(), BorderLayout.NORTH);
 		add(createCenterComponent(), BorderLayout.CENTER);
 		add(createBottomComponent(), BorderLayout.SOUTH);
@@ -53,77 +66,62 @@ public class EVSHistoryPanel extends JPanel {
 		setVisible(true);
     }
 	
-	class DateLabelFormatter extends AbstractFormatter {
-
-	    private String datePattern = "yyyy-MM-dd";
-	    private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
-
-	    @Override
-	    public Object stringToValue(String text) throws ParseException {
-	        return dateFormatter.parseObject(text);
-	    }
-
-	    @Override
-	    public String valueToString(Object value) throws ParseException {
-	        if (value != null) {
-	            Calendar cal = (Calendar) value;
-	            return dateFormatter.format(cal.getTime());
-	        }
-
-	        return "";
-	    }
-
-	}
-	
 	private JPanel createTopComponent( ) {
 		JPanel filterPanel = new JPanel();
 		filterPanel.setPreferredSize(new Dimension(300, 40));
-		JLabel dateLabel = new JLabel("Start Date ");
-		filterPanel.add(dateLabel);
 		
-		/*UtilDateModel model = new UtilDateModel();
-		//model.setDate(20,04,2014);
-		// Need this...
-		Properties p = new Properties();
-		p.put("text.today", "Today");
-		p.put("text.month", "Month");
-		p.put("text.year", "Year");
-		JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-		// Don't know about the formatter, but there it is...
-		JDatePickerImpl startdatePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+		JLabel startDateLabel = new JLabel("Start Date ");
+		EmptyBorder emptyBorder = new EmptyBorder(5, 5, 5, 5);
+		startDateLabel.setBorder(emptyBorder);
+		filterPanel.add(startDateLabel);
 		
-		JDatePickerImpl enddatePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-		
+		startdatePicker = new JDatePicker();
 		filterPanel.add(startdatePicker);
 		
-		filterPanel.add(new JLabel("End Date "));
+		JLabel endDateLabel = new JLabel("End Date ");
+		EmptyBorder emptyBorder2 = new EmptyBorder(5, 50, 5, 5);
+		endDateLabel.setBorder(emptyBorder2);
+		filterPanel.add(endDateLabel);
 		
-		filterPanel.add(enddatePicker);*/
-		
-		//JDatePanel datePanel = new JDatePanel();
-		
-		JDatePicker startdatePicker = new JDatePicker();
-		
-		JDatePicker enddatePicker = new JDatePicker();
-		
-		filterPanel.add(startdatePicker);
-		
-		filterPanel.add(new JLabel("End Date "));
-		
+		enddatePicker = new JDatePicker();	
 		filterPanel.add(enddatePicker);
+		
+		JLabel userNameLabel = new JLabel("Username ");
+		userNameLabel.setBorder(emptyBorder2);
+		usernameField = new JTextField(20);
+		filterPanel.add(userNameLabel);
+		filterPanel.add(usernameField);
+		
+		JLabel codeLabel = new JLabel("Code ");
+		codeLabel.setBorder(emptyBorder2);
+		codeField = new JTextField(15);
+		filterPanel.add(codeLabel);
+		filterPanel.add(codeField);
+		
+		JLabel operationLabel = new JLabel("Operation ");
+		operationLabel.setBorder(emptyBorder2);
+		operationCombobox = new JComboBox(OPERATION.values());
+		filterPanel.add(operationLabel);
+		filterPanel.add(operationCombobox);
+		
+		goBtn = new JButton("Go");
+		EmptyBorder emptyBorder3 = new EmptyBorder(5, 50, 5, 50);
+		goBtn.setBorder(emptyBorder3);
+		goBtn.addActionListener(this);
+		filterPanel.add(goBtn);
 		
 		return filterPanel;
 	}
 	
 	private JScrollPane createCenterComponent() {
-		//JPanel tablePanel = new JPanel();
+		
 		evsHistoryTable = new JTable(tableModel);
 		evsHistoryTable.setShowGrid(true);
 		evsHistoryTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		evsHistoryTable.getTableHeader().setReorderingAllowed(true);
-		evsHistoryTable.setFillsViewportHeight(true);   
+		evsHistoryTable.setFillsViewportHeight(true); 
 		evsHistoryTable.setAutoCreateRowSorter(true);
-		evsHistoryTable.setRowHeight(50);
+		evsHistoryTable.setRowHeight(35);
 		
 		JScrollPane sPane = new JScrollPane(evsHistoryTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		return sPane;
@@ -162,4 +160,43 @@ public class EVSHistoryPanel extends JPanel {
 	public void disposeView() {
     	
     }
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String startdate = startdatePicker.getFormattedTextField().getText();
+		String enddate = enddatePicker.getFormattedTextField().getText();
+		
+		if (!validateDate(startdate, enddate, "MMM dd, yyyy")) {
+			JOptionPane.showMessageDialog(this, "Start date can not be later than end date.");
+			return;
+		}
+		
+		String username = usernameField.getText();
+		String code = codeField.getText();
+		String operation = operationCombobox.getSelectedItem().toString();
+		
+		try {
+			tableModel.setHistoryList(startdate, enddate, username, code, operation);
+			tableModel.fireTableDataChanged();  
+		} catch (ParseException ex) {
+			log.error(ex.getMessage(), ex);
+		}
+	}
+	
+	private boolean validateDate( String startdate, String enddate, String datePattern ) {
+		SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
+		Date startdt = null;
+		Date enddt = null;
+		try {
+			startdt = dateFormatter.parse(startdate);
+			enddt = dateFormatter.parse(enddate);
+		} catch (ParseException ex) {
+			JOptionPane.showMessageDialog(this, "Please select a date from Calendar.");
+			return false;
+		}
+		if (startdt.after(enddt)) {
+			return false;
+		}
+		return true;
+	}
 }
