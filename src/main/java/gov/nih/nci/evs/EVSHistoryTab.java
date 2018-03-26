@@ -113,6 +113,20 @@ public class EVSHistoryTab extends OWLWorkspaceViewsTab /*implements ClientSessi
 		return null;
     		
     }
+	
+	public List<History> getEvsHistory(History history) {
+    	try {
+			return ((LocalHttpClient) clientSession.getActiveClient()).getEVSHistory(history, clientSession.getActiveProject());
+		} catch (ClientRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (AuthorizationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+    		
+    }
 
 	/*@Override
 	public void operationPerformed(CommitOperationEvent event) {

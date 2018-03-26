@@ -3,11 +3,14 @@ package gov.nih.nci.evs;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -22,6 +25,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
 import org.protege.editor.owl.OWLEditorKit;
+import org.protege.editor.owl.server.http.messages.History;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import org.apache.log4j.Logger;
@@ -67,48 +71,106 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
     }
 	
 	private JPanel createTopComponent( ) {
+		
 		JPanel filterPanel = new JPanel();
-		filterPanel.setPreferredSize(new Dimension(300, 40));
+		filterPanel.setLayout(new GridBagLayout());
+		filterPanel.setPreferredSize(new Dimension(300, 80));
+		filterPanel.setBorder(new EmptyBorder(0, 50, 0, 50));
 		
-		JLabel startDateLabel = new JLabel("Start Date ");
-		EmptyBorder emptyBorder = new EmptyBorder(5, 5, 5, 5);
-		startDateLabel.setBorder(emptyBorder);
-		filterPanel.add(startDateLabel);
+		EmptyBorder emptyBorder = new EmptyBorder(0, 5, 0, 5);
 		
-		startdatePicker = new JDatePicker();
-		filterPanel.add(startdatePicker);
-		
-		JLabel endDateLabel = new JLabel("End Date ");
-		EmptyBorder emptyBorder2 = new EmptyBorder(5, 50, 5, 5);
-		endDateLabel.setBorder(emptyBorder2);
-		filterPanel.add(endDateLabel);
-		
-		enddatePicker = new JDatePicker();	
-		filterPanel.add(enddatePicker);
+		GridBagConstraints c = new GridBagConstraints();
+		c.weightx = 1.5;
+		c.gridx = 0;
+		c.gridy = 0;
+		//c.insets = new Insets(5, 5, 5, 5);
+		c.anchor = GridBagConstraints.LINE_END;
 		
 		JLabel userNameLabel = new JLabel("Username ");
-		userNameLabel.setBorder(emptyBorder2);
+		userNameLabel.setBorder(emptyBorder);
+		filterPanel.add(userNameLabel, c);
+		
+		//c.weightx = 0.5;
+		c.gridx = 1;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.LINE_START;
 		usernameField = new JTextField(20);
-		filterPanel.add(userNameLabel);
-		filterPanel.add(usernameField);
+		usernameField.setBorder(emptyBorder);
+		filterPanel.add(usernameField, c);
 		
-		JLabel codeLabel = new JLabel("Code ");
-		codeLabel.setBorder(emptyBorder2);
-		codeField = new JTextField(15);
-		filterPanel.add(codeLabel);
-		filterPanel.add(codeField);
+		//c.weightx = 0.5;
+		c.gridx = 2;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.LINE_END;
+		JLabel startDateLabel = new JLabel("Start Date ");
+		startDateLabel.setBorder(emptyBorder);
+		filterPanel.add(startDateLabel, c);
 		
+		//c.weightx = 0.5;
+		c.gridx = 3;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.LINE_START;
+		startdatePicker = new JDatePicker();
+		startdatePicker.setBorder(emptyBorder);
+		filterPanel.add(startdatePicker, c);
+		
+		//c.weightx = 0.5;
+		c.gridx = 4;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.LINE_END;
 		JLabel operationLabel = new JLabel("Operation ");
-		operationLabel.setBorder(emptyBorder2);
-		operationCombobox = new JComboBox(OPERATION.values());
-		filterPanel.add(operationLabel);
-		filterPanel.add(operationCombobox);
+		operationLabel.setBorder(emptyBorder);
+		filterPanel.add(operationLabel, c);
 		
+		//c.weightx = 0.5;
+		c.gridx = 5;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.LINE_START;
+		operationCombobox = new JComboBox(OPERATION.values());
+		operationCombobox.setBorder(emptyBorder);
+		filterPanel.add(operationCombobox, c);
+		
+		//c.weightx = 0.5;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.anchor = GridBagConstraints.LINE_END;
+		JLabel codeLabel = new JLabel("Code ");
+		codeLabel.setBorder(emptyBorder);
+		filterPanel.add(codeLabel, c);
+		
+		//c.weightx = 0.5;
+		c.gridx = 1;
+		c.gridy = 1;
+		c.anchor = GridBagConstraints.LINE_START;
+		codeField = new JTextField(20);
+		codeField.setBorder(emptyBorder);
+		filterPanel.add(codeField, c);
+		
+		//c.weightx = 0.5;
+		c.gridx = 2;
+		c.gridy = 1;
+		c.anchor = GridBagConstraints.LINE_END;
+		JLabel endDateLabel = new JLabel("End Date ");
+		endDateLabel.setBorder(emptyBorder);
+		filterPanel.add(endDateLabel, c);
+		
+		//c.weightx = 1.5;
+		c.gridx = 3;
+		c.gridy = 1;
+		c.anchor = GridBagConstraints.LINE_START;
+		enddatePicker = new JDatePicker();	
+		enddatePicker.setBorder(emptyBorder);
+		filterPanel.add(enddatePicker, c);
+		
+		//c.weightx = 1.5;
+		c.gridx = 4;
+		c.gridy = 1;
+		c.anchor = GridBagConstraints.LINE_END;
 		goBtn = new JButton("Go");
-		EmptyBorder emptyBorder3 = new EmptyBorder(5, 50, 5, 50);
-		goBtn.setBorder(emptyBorder3);
+		goBtn.setBorder(emptyBorder);
+		goBtn.setPreferredSize(new Dimension(60, 30));
 		goBtn.addActionListener(this);
-		filterPanel.add(goBtn);
+		filterPanel.add(goBtn, c);
 		
 		return filterPanel;
 	}
@@ -137,6 +199,9 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 		refresh = new JButton("Refresh");
 		export = new JButton("Export");
 		
+		refresh.addActionListener(this);
+		export.addActionListener(this);
+		
 		panel.add(refresh);
 		panel.add(Box.createHorizontalStrut(100));
 		panel.add(export);
@@ -163,23 +228,35 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String startdate = startdatePicker.getFormattedTextField().getText();
-		String enddate = enddatePicker.getFormattedTextField().getText();
-		
-		if (!validateDate(startdate, enddate, "MMM dd, yyyy")) {
-			JOptionPane.showMessageDialog(this, "Start date can not be later than end date.");
-			return;
-		}
-		
-		String username = usernameField.getText();
-		String code = codeField.getText();
-		String operation = operationCombobox.getSelectedItem().toString();
-		
-		try {
-			tableModel.setHistoryList(startdate, enddate, username, code, operation);
-			tableModel.fireTableDataChanged();  
-		} catch (ParseException ex) {
-			log.error(ex.getMessage(), ex);
+		if ( e.getSource() == goBtn ) {
+			String startdate = startdatePicker.getFormattedTextField().getText();
+			String enddate = enddatePicker.getFormattedTextField().getText();
+			
+			if (startdate != null && enddate != null && !startdate.isEmpty() && !enddate.isEmpty()) {
+				if (!validateDate(startdate, enddate, "MMM dd, yyyy")) {
+					JOptionPane.showMessageDialog(this, "Start date can not be later than end date.");
+					return;
+				}
+			}
+			
+			String username = usernameField.getText();
+			String code = codeField.getText();
+			String operation = operationCombobox.getSelectedItem().toString();
+			
+			History query = new History();
+			query.setQueryArgs(startdate, enddate, username, code, operation);
+			
+			tableModel.setHistoryList(query);
+			tableModel.fireTableDataChanged();
+			
+		} else if (e.getSource() == refresh ) {
+			System.out.println("##### Refresh button pressed.");
+			tableModel.refreshHistoryList();
+			tableModel.fireTableDataChanged();
+		} else if (e.getSource() == export ) {
+			System.out.println("##### Export button pressed.");
+			List<History> hisList = tableModel.getHistoryList();
+			
 		}
 	}
 	
@@ -187,9 +264,11 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 		SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
 		Date startdt = null;
 		Date enddt = null;
+
 		try {
 			startdt = dateFormatter.parse(startdate);
 			enddt = dateFormatter.parse(enddate);
+			
 		} catch (ParseException ex) {
 			JOptionPane.showMessageDialog(this, "Please select a date from Calendar.");
 			return false;
@@ -197,6 +276,7 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 		if (startdt.after(enddt)) {
 			return false;
 		}
+		
 		return true;
 	}
 }

@@ -1,9 +1,6 @@
 package gov.nih.nci.evs;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -83,30 +80,18 @@ public class EVSHistoryTableModel extends AbstractTableModel {
 		return columnName;
 	}
 	
-	public void setHistoryList( String startdate, String enddate, String username, String code, String operation ) throws ParseException {	
-		historyList = new ArrayList<History>(orgHistoryList);
-		for (History history : orgHistoryList) {
-			if ( !inDaterang(history.getDate(), startdate, enddate)) {
-				historyList.remove(history);
-			}
-		}
+	public void setHistoryList( History query ) {	
+		historyList = EVSHistoryTab.currentTab().getEvsHistory(query);
 	}
 	
-	private boolean inDaterang (String date, String startdate, String enddate ) throws ParseException {
-		String datePattern1 = "MMM dd, yyyy";
-		String datePattern2 = "yyyy-MM-dd";
-		SimpleDateFormat dateFormatter1 = new SimpleDateFormat(datePattern1);
-		SimpleDateFormat dateFormatter2 = new SimpleDateFormat(datePattern2);
-		
-		Date dt = dateFormatter2.parse(date);
-		Date startdt = dateFormatter1.parse(startdate);
-		Date enddt = dateFormatter1.parse(enddate);
-		
-		if (dt.before(startdt) || dt.after(enddt)) {
-			return false;
-		}
-		return true;
+	public void refreshHistoryList() {
+		historyList = EVSHistoryTab.currentTab().getEvsHistory();
 	}
+	
+	public List<History> getHistoryList() {
+		return historyList;
+	}
+	
 	private List<String> getHistoryElements(History history) {
 		List<String> elementList = new ArrayList<String>();
 		elementList.add(history.getDate());
