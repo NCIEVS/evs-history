@@ -10,11 +10,9 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -43,17 +41,17 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 	private JTextField usernameField;
 	private JTextField codeField;
 	private JComboBox operationCombobox;
-	private JButton goBtn;
+	private JButton executeBtn;
 	
 	private JTable evsHistoryTable;
-	private JButton refresh;
+	//private JButton refresh;
 	private JButton export;
 	private EVSHistoryTableModel tableModel;
 	
 	private OWLEditorKit owlEditorKit;
 	private OWLClass selected = null;
 	
-	enum OPERATION {ALL, CREATE, UPDATE, DELETE, SPLIT, MERGE, RETIRE, COPY};
+	enum OPERATION {ALL, CREATE, MODIFY, SPLIT, MERGE, RETIRE};
 	
 	public EVSHistoryPanel(OWLEditorKit editorKit) {
     	
@@ -168,11 +166,11 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 		c.gridx = 4;
 		c.gridy = 1;
 		c.anchor = GridBagConstraints.LINE_END;
-		goBtn = new JButton("Go");
-		goBtn.setBorder(emptyBorder);
-		goBtn.setPreferredSize(new Dimension(60, 30));
-		goBtn.addActionListener(this);
-		filterPanel.add(goBtn, c);
+		executeBtn = new JButton("Execute");
+		executeBtn.setBorder(emptyBorder);
+		executeBtn.setPreferredSize(new Dimension(120, 30));
+		executeBtn.addActionListener(this);
+		filterPanel.add(executeBtn, c);
 		
 		return filterPanel;
 	}
@@ -198,14 +196,14 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 		JPanel panel = new JPanel();
 		panel.setPreferredSize(new Dimension(300, 40));
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER));
-		refresh = new JButton("Refresh");
+		//refresh = new JButton("Refresh");
 		export = new JButton("Export");
 		
-		refresh.addActionListener(this);
+		//.addActionListener(this);
 		export.addActionListener(this);
 		
-		panel.add(refresh);
-		panel.add(Box.createHorizontalStrut(100));
+		//panel.add(refresh);
+		//panel.add(Box.createHorizontalStrut(100));
 		panel.add(export);
 		return panel;
 	}
@@ -230,7 +228,7 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if ( e.getSource() == goBtn ) {
+		if ( e.getSource() == executeBtn ) {
 			String startdate = startdatePicker.getFormattedTextField().getText();
 			String enddate = enddatePicker.getFormattedTextField().getText();
 			
@@ -276,10 +274,10 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 			tableModel.setHistoryList(query);
 			tableModel.fireTableDataChanged();
 			
-		} else if (e.getSource() == refresh ) {
+		/*} else if (e.getSource() == refresh ) {
 			System.out.println("##### Refresh button pressed.");
 			tableModel.refreshHistoryList();
-			tableModel.fireTableDataChanged();
+			tableModel.fireTableDataChanged();*/
 		} else if (e.getSource() == export ) {
 			System.out.println("##### Export button pressed.");
 			List<History> hisList = tableModel.getHistoryList();
