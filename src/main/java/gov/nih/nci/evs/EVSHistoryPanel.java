@@ -7,8 +7,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -232,8 +234,26 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 			String startdate = startdatePicker.getFormattedTextField().getText();
 			String enddate = enddatePicker.getFormattedTextField().getText();
 			
-			if (startdate != null && enddate != null && !startdate.isEmpty() && !enddate.isEmpty()) {
-				if (!validateDate(startdate, enddate, "MMM dd, yyyy")) {
+			DateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy");
+			Date startDate = null;
+			Date endDate = null;
+			
+			if (startdate != null && !startdate.isEmpty()) {
+				try {
+					startDate = dateFormatter.parse(startdate);
+				} catch (ParseException ex) {
+					JOptionPane.showMessageDialog(this, "Please select a start date from Calendar.");	
+				}
+			}
+			if (enddate != null && !enddate.isEmpty()) {
+				try {
+					endDate = dateFormatter.parse(enddate);
+				} catch (ParseException ex) {
+					JOptionPane.showMessageDialog(this, "Please select an end date from Calendar.");	
+				}
+			}
+			if (startDate != null && endDate != null) {
+				if (startDate.after(endDate)) {
 					JOptionPane.showMessageDialog(this, "Start date can not be later than end date.");
 					return;
 				}
@@ -242,6 +262,13 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 			String username = usernameField.getText();
 			String code = codeField.getText();
 			String operation = operationCombobox.getSelectedItem().toString();
+			if (operation.equals("ALL")) {
+				operation = null;
+			}
+			
+			dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			startdate = startDate == null ? "" : dateFormatter.format(startDate);
+			enddate = endDate == null ? "" : dateFormatter.format(endDate);
 			
 			History query = new History();
 			query.setQueryArgs(startdate, enddate, username, code, operation);
@@ -260,23 +287,4 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 		}
 	}
 	
-	private boolean validateDate( String startdate, String enddate, String datePattern ) {
-		SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
-		Date startdt = null;
-		Date enddt = null;
-
-		try {
-			startdt = dateFormatter.parse(startdate);
-			enddt = dateFormatter.parse(enddate);
-			
-		} catch (ParseException ex) {
-			JOptionPane.showMessageDialog(this, "Please select a date from Calendar.");
-			return false;
-		}
-		if (startdt.after(enddt)) {
-			return false;
-		}
-		
-		return true;
-	}
 }
