@@ -7,6 +7,13 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,6 +24,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -26,8 +34,11 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
+import org.protege.editor.core.prefs.Preferences;
+import org.protege.editor.core.prefs.PreferencesManager;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.server.http.messages.History;
+import org.protege.editor.owl.server.http.messages.History.HistoryType;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import org.apache.log4j.Logger;
@@ -52,6 +63,7 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 	
 	private OWLEditorKit owlEditorKit;
 	private OWLClass selected = null;
+	protected static final String LAST_USED_FOLDER = "";
 	
 	enum OPERATION {ALL, CREATE, MODIFY, SPLIT, MERGE, RETIRE};
 	
@@ -287,9 +299,53 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 			tableModel.refreshHistoryList();
 			tableModel.fireTableDataChanged();*/
 		} else if (e.getSource() == export ) {
-			System.out.println("##### Export button pressed.");
+			//System.out.println("##### Export button pressed.");
 			List<History> hisList = tableModel.getHistoryList();
 			
+			Preferences prefs = PreferencesManager.getInstance().getApplicationPreferences(getClass());   
+			JFileChooser fc = new JFileChooser(prefs.getString(LAST_USED_FOLDER, new File(".").getAbsolutePath()));
+			
+			BufferedWriter bw = null;
+			FileWriter fw = null;
+			
+			int select = fc.showOpenDialog(this);
+			if (select == JFileChooser.APPROVE_OPTION) {
+				prefs.putString(LAST_USED_FOLDER, fc.getSelectedFile().getParent());
+			  
+				File file = fc.getSelectedFile();
+				String infile = file.getAbsolutePath();
+				
+				try {
+					
+					fw = new FileWriter(infile);
+					bw = new BufferedWriter(fw);
+				    
+					if (hisList != null && !hisList.isEmpty()) {
+						for (History history : hisList) {
+							
+							bw.write(history.toRecord(HistoryType.EVS) + System.lineSeparator());
+						}
+					}
+					
+				} catch (IOException ex) {
+					log.error(ex.getMessage());
+				}
+				finally {
+					try {
+
+						if (bw != null)
+							bw.close();
+
+						if (fw != null)
+							fw.close();
+
+					} catch (IOException ex) {
+
+						ex.printStackTrace();
+
+					}
+				}
+			}
 		}
 	}
 	
