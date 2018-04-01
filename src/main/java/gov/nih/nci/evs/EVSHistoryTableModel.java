@@ -12,12 +12,12 @@ import org.semanticweb.owlapi.model.OWLOntology;
 public class EVSHistoryTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	private List<History> historyList;
-	private List<History> orgHistoryList;
+	//private List<History> orgHistoryList;
 	OWLOntology ont;
 	
 	public EVSHistoryTableModel(OWLEditorKit k) {
 		ont = k.getOWLModelManager().getActiveOntology();
-		orgHistoryList = EVSHistoryTab.currentTab().getEvsHistory();
+		//orgHistoryList = EVSHistoryTab.currentTab().getEvsHistory();
 		historyList = new ArrayList<History>();
 		
 		//String prefsID = getClass().toString() + EVSHistoryTab.currentTab().getRDFSLabel(complexProp).get();
