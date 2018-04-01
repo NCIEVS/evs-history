@@ -128,6 +128,10 @@ public class EVSHistoryTab extends OWLWorkspaceViewsTab /*implements ClientSessi
     		
     }
 
+	public String getUserId() {
+		return clientSession.getActiveClient().getUserInfo().getId();
+	}
+	
 	/*@Override
 	public void operationPerformed(CommitOperationEvent event) {
 		history.reset();	

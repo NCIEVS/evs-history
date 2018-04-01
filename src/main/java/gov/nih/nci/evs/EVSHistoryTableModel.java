@@ -18,7 +18,7 @@ public class EVSHistoryTableModel extends AbstractTableModel {
 	public EVSHistoryTableModel(OWLEditorKit k) {
 		ont = k.getOWLModelManager().getActiveOntology();
 		orgHistoryList = EVSHistoryTab.currentTab().getEvsHistory();
-		historyList = new ArrayList<History>(orgHistoryList);
+		historyList = new ArrayList<History>();
 		
 		//String prefsID = getClass().toString() + EVSHistoryTab.currentTab().getRDFSLabel(complexProp).get();
 		//prefs = PreferencesManager.getInstance().getApplicationPreferences(prefsID);

@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -96,6 +97,8 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 		c.anchor = GridBagConstraints.LINE_START;
 		usernameField = new JTextField(20);
 		usernameField.setBorder(emptyBorder);
+		String username = EVSHistoryTab.currentTab().getUserId();
+		usernameField.setText(username);
 		filterPanel.add(usernameField, c);
 		
 		//c.weightx = 0.5;
@@ -106,12 +109,18 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 		startDateLabel.setBorder(emptyBorder);
 		filterPanel.add(startDateLabel, c);
 		
+		LocalDate now = LocalDate.now();
 		//c.weightx = 0.5;
 		c.gridx = 3;
 		c.gridy = 0;
 		c.anchor = GridBagConstraints.LINE_START;
 		startdatePicker = new JDatePicker();
 		startdatePicker.setBorder(emptyBorder);
+		//startdatePicker.setTextEditable(true);
+		//startdatePicker.getModel().setDate(now.getYear(), now.getMonthValue(), 1);
+		UtilDateModel model = new UtilDateModel();
+		model.setDate(now.getYear(), now.getMonthValue(), 1);
+		
 		filterPanel.add(startdatePicker, c);
 		
 		//c.weightx = 0.5;
@@ -160,6 +169,7 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 		c.anchor = GridBagConstraints.LINE_START;
 		enddatePicker = new JDatePicker();	
 		enddatePicker.setBorder(emptyBorder);
+		enddatePicker.getModel().setDate(now.getYear(), now.getMonthValue(), now.getDayOfMonth());
 		filterPanel.add(enddatePicker, c);
 		
 		//c.weightx = 1.5;
