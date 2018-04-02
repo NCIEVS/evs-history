@@ -9,11 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,15 +31,14 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
+import org.apache.log4j.Logger;
+import org.jdatepicker.JDatePicker;
 import org.protege.editor.core.prefs.Preferences;
 import org.protege.editor.core.prefs.PreferencesManager;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.server.http.messages.History;
 import org.protege.editor.owl.server.http.messages.History.HistoryType;
 import org.semanticweb.owlapi.model.OWLClass;
-
-import org.apache.log4j.Logger;
-import org.jdatepicker.*;
 
 public class EVSHistoryPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = -4987773065094148253L;
@@ -183,11 +179,11 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 		filterPanel.add(enddatePicker, c);
 		
 		//c.weightx = 1.5;
-		c.gridx = 4;
+		c.gridx = 5;
 		c.gridy = 1;
-		c.anchor = GridBagConstraints.LINE_END;
+		c.anchor = GridBagConstraints.CENTER;
 		executeBtn = new JButton("Execute");
-		executeBtn.setBorder(emptyBorder);
+		//executeBtn.setBorder(emptyBorder);
 		executeBtn.setPreferredSize(new Dimension(120, 30));
 		executeBtn.addActionListener(this);
 		filterPanel.add(executeBtn, c);
@@ -308,7 +304,7 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 			BufferedWriter bw = null;
 			FileWriter fw = null;
 			
-			int select = fc.showOpenDialog(this);
+			int select = fc.showSaveDialog(this);
 			if (select == JFileChooser.APPROVE_OPTION) {
 				prefs.putString(LAST_USED_FOLDER, fc.getSelectedFile().getParent());
 			  
