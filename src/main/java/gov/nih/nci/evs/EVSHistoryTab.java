@@ -1,5 +1,6 @@
 package gov.nih.nci.evs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -119,7 +120,8 @@ public class EVSHistoryTab extends OWLWorkspaceViewsTab /*implements ClientSessi
 			return ((LocalHttpClient) clientSession.getActiveClient()).getEVSHistory(history, clientSession.getActiveProject());
 		} catch (ClientRequestException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			return new ArrayList<History>();
 		} catch (AuthorizationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
