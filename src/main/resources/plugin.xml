@@ -8,7 +8,7 @@
         <class value="gov.nih.nci.evs.EVSHistoryTab"/>
         <editorKitId value="OWLEditorKit"/>
         <index value="Y"/>
-        <defaultViewConfigFileName value="viewconfig.xml"/>
+        <defaultViewConfigFileName value="viewconfig_evh.xml"/>
     </extension>
     
 	<!-- View -->
