@@ -14,10 +14,10 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -31,8 +31,11 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
+import org.jdatepicker.impl.*;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+
 import org.apache.log4j.Logger;
-import org.jdatepicker.JDatePicker;
 import org.protege.editor.core.prefs.Preferences;
 import org.protege.editor.core.prefs.PreferencesManager;
 import org.protege.editor.owl.OWLEditorKit;
@@ -45,8 +48,8 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 
 	private static final Logger log = Logger.getLogger(EVSHistoryPanel.class);
 	
-	private JDatePicker startdatePicker;
-	private JDatePicker enddatePicker;
+	private JDatePickerImpl startdatePicker;
+	private JDatePickerImpl enddatePicker;
 	private JTextField usernameField;
 	private JTextField codeField;
 	private JComboBox operationCombobox;
@@ -118,17 +121,28 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 		startDateLabel.setBorder(emptyBorder);
 		filterPanel.add(startDateLabel, c);
 		
-		LocalDate now = LocalDate.now();
 		//c.weightx = 0.5;
 		c.gridx = 3;
 		c.gridy = 0;
 		c.anchor = GridBagConstraints.LINE_START;
+		
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
-		Date fistDtOfMonth = cal.getTime();
-		startdatePicker = new JDatePicker(fistDtOfMonth);
-		startdatePicker.setBorder(emptyBorder);
-		filterPanel.add(startdatePicker, c);
+		UtilDateModel startmodel = new UtilDateModel();
+		startmodel.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+		startmodel.setSelected(true);
+		Properties p = new Properties();
+		p.put("text.today", "today");
+		p.put("text.month", "month");
+		p.put("text.year", "year");
+		DateComponentFormatter dateFormatter = new DateComponentFormatter();
+        JDatePanelImpl datePanel = new JDatePanelImpl(startmodel, p);
+        startdatePicker = new JDatePickerImpl(datePanel, dateFormatter);
+        Dimension dm = startdatePicker.getPreferredSize();
+        datePanel.setPreferredSize(new Dimension(dm.width + 100, 220));
+        startdatePicker.setPreferredSize(new Dimension(dm.width + 50, dm.height));
+        startdatePicker.setBorder(emptyBorder);
+        filterPanel.add(startdatePicker, c);
 		
 		//c.weightx = 0.5;
 		c.gridx = 4;
@@ -174,14 +188,22 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 		c.gridx = 3;
 		c.gridy = 1;
 		c.anchor = GridBagConstraints.LINE_START;
-		enddatePicker = new JDatePicker(new Date());	
+		
+		UtilDateModel endmodel = new UtilDateModel();
+		cal.setTime(new Date());
+		endmodel.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+		endmodel.setSelected(true);
+        JDatePanelImpl enddatePanel = new JDatePanelImpl(endmodel, p);
+		enddatePicker = new JDatePickerImpl(enddatePanel, dateFormatter);
+		enddatePanel.setPreferredSize(new Dimension(dm.width + 100, 220));
+		enddatePicker.setPreferredSize(new Dimension(dm.width + 50, dm.height));
 		enddatePicker.setBorder(emptyBorder);
 		filterPanel.add(enddatePicker, c);
 		
 		//c.weightx = 1.5;
 		c.gridx = 5;
 		c.gridy = 1;
-		c.anchor = GridBagConstraints.CENTER;
+		c.anchor = GridBagConstraints.LINE_START;
 		executeBtn = new JButton("Execute");
 		//executeBtn.setBorder(emptyBorder);
 		executeBtn.setPreferredSize(new Dimension(120, 30));
@@ -245,8 +267,8 @@ public class EVSHistoryPanel extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if ( e.getSource() == executeBtn ) {
-			String startdate = startdatePicker.getFormattedTextField().getText();
-			String enddate = enddatePicker.getFormattedTextField().getText();
+			String startdate = startdatePicker.getJFormattedTextField().getText();
+			String enddate = enddatePicker.getJFormattedTextField().getText();
 			
 			DateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy");
 			Date startDate = null;
