@@ -3,7 +3,7 @@ package gov.nih.nci.evs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 import org.protege.editor.owl.client.ClientSession;
 import org.protege.editor.owl.client.LocalHttpClient;
 import org.protege.editor.owl.client.SessionRecorder;
@@ -18,6 +18,8 @@ import org.protege.editor.owl.client.api.exception.ClientRequestException;
 //import org.protege.editor.owl.model.history.UndoManagerListener;
 import org.protege.editor.owl.server.http.messages.History;
 import org.protege.editor.owl.ui.OWLWorkspaceViewsTab;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //import edu.stanford.protege.search.lucene.tab.engine.IndexDirMapper;
 //import edu.stanford.protege.search.lucene.tab.engine.SearchTabManager;
@@ -26,7 +28,7 @@ import org.protege.editor.owl.ui.OWLWorkspaceViewsTab;
 
 public class EVSHistoryTab extends OWLWorkspaceViewsTab /*implements ClientSessionListener, UndoManagerListener, CommitOperationListener*/ {
 	private static final long serialVersionUID = -9108654344910669629L;
-	private static final Logger log = Logger.getLogger(EVSHistoryTab.class);
+	private static final Logger log = LoggerFactory.getLogger(EVSHistoryTab.class);
 	
 	private ClientSession clientSession = null;
 	private SessionRecorder history;

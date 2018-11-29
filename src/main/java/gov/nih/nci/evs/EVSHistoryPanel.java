@@ -35,18 +35,20 @@ import org.jdatepicker.impl.*;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 
-import org.apache.log4j.Logger;
+
 import org.protege.editor.core.prefs.Preferences;
 import org.protege.editor.core.prefs.PreferencesManager;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.server.http.messages.History;
 import org.protege.editor.owl.server.http.messages.History.HistoryType;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public class EVSHistoryPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = -4987773065094148253L;
 
-	private static final Logger log = Logger.getLogger(EVSHistoryPanel.class);
+	private static final Logger log = LoggerFactory.getLogger(EVSHistoryPanel.class);
 	
 	private JDatePickerImpl startdatePicker;
 	private JDatePickerImpl enddatePicker;
