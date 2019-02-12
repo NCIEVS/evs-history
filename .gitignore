@@ -29,3 +29,6 @@ hs_err_pid*
 
 # emacs artifacts
 *~
+
+# OS X
+.DS_Store
